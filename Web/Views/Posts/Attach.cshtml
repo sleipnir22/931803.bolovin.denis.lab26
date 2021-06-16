@@ -1,0 +1,38 @@
+﻿@model Web.Controllers.PostsController.AttachingViewModel
+@{
+    ViewBag.Title = "Attach";
+}
+<h2>@ViewBag.Title</h2>
+
+<form asp-controller="Posts" asp-action="Attach" asp-route-postId="@Model.PostId">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    
+    <!-- Url -->
+    <div class="form-group">
+        <label asp-for="Url" class="font-weight-bold"></label>
+        <input asp-for="Url" class="form-control" />
+        
+        <span asp-validation-for="Url"></span>
+    </div>
+    
+    <!-- Alt -->
+    <div class="form-group">
+        <label asp-for="Alt" class="font-weight-bold"></label>
+        <input asp-for="Alt" class="form-control" />
+            
+        <span asp-validation-for="Alt"></span>
+    </div>
+    
+    <!-- IsImage -->
+    <div class="form-group form-check">
+        <input asp-for="IsImage" class="form-check-input" />
+        <label asp-for="IsImage" class="font-weight-bold form-check-label"></label>
+        
+        <span asp-validation-for="IsImage"></span>
+    </div>
+    
+    <!-- Submit -->
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-outline-primary btn-sm" />
+    </div>
+</form>

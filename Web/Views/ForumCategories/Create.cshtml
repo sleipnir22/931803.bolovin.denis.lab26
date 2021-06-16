@@ -1,0 +1,30 @@
+﻿@model Web.Controllers.ForumCategoriesController.CategoryCreatingViewModel
+@{
+    ViewBag.Title = "Create forum category";
+}
+<h2>@ViewBag.Title</h2>
+
+<form asp-controller="ForumCategories" asp-action="Create">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    
+    <!-- Name -->
+    <div class="form-group">
+        <label asp-for="Name" class="font-weight-bold"></label>
+        <input asp-for="Name" class="form-control" />
+        
+        <span asp-validation-for="Name"></span>
+    </div>
+    
+    <!-- Description -->
+        <div class="form-group">
+            <label asp-for="Description" class="font-weight-bold"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            
+            <span asp-validation-for="Description"></span>
+        </div>
+    
+    <!-- Submit -->
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-outline-primary btn-sm" />
+    </div>
+</form>

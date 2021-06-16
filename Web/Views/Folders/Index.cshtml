@@ -1,0 +1,108 @@
+﻿@using System.Security.Claims
+@model Web.ViewModels.Folders.FolderViewModel
+@{
+    ViewBag.Title = Model.Folder.Name;
+}
+<h1>@Model.Folder.Name</h1>
+
+<div class="input-group input-group-sm mb-1">
+    <div class="input-group-prepend">
+        @foreach (var (name, id) in Model.Path)
+        {
+            <span class="input-group-text">
+                <a asp-controller="Folders" asp-action="GetFolder" asp-route-id="@id">@name</a>
+            </span>
+        }
+    </div>
+    <div class="form-control"></div>
+    <div class="input-group-append">
+        @if (Context.User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-outline-info" asp-controller="Folders" asp-action="Create" asp-route-parentFolderId="@Model.Folder.Id">
+                <i class="bi bi-folder-plus"></i>
+            </a>
+            <a class="btn btn-outline-info" asp-controller="Folders" asp-action="Upload" asp-route-id="@Model.Folder.Id">
+                <i class="bi bi-file-earmark-plus"></i>
+            </a>
+            @if ((new Guid(Context.User.FindFirstValue("Id")) == Model.Folder.OwnerId || Context.User.IsInRole("Admin")) && Model.Folder.ParentFolderId is { })
+            {
+                <a class="btn btn-outline-danger" asp-controller="Folders" asp-action="Delete" asp-route-id="@Model.Folder.Id"><i class="bi bi-trash"></i></a>
+            }
+        }
+    </div>
+</div>
+
+<table class="table table-bordered table-hover table-sm">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Owner</th>
+        <th scope="col">Size</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.Folder.ParentFolder != null)
+    {
+        <tr>
+            <th scope="row">
+                <a asp-controller="Folders" asp-action="GetFolder" asp-route-id="@Model.Folder.ParentFolder.Id">
+                    <i class="bi bi-folder2"></i> ..
+                </a>
+            </th>
+            <td>@Model.Folder.ParentFolder.Owner.Email</td>
+            <td>---</td>
+            <td></td>
+        </tr>
+    }
+    @foreach (var folder in Model.Folder.Folders)
+    {
+        <tr>
+            <th scope="row">
+                <a asp-controller="Folders" asp-action="GetFolder" asp-route-id="@folder.Id">
+                    <i class="bi bi-folder2"></i> @folder.Name
+                </a>
+            </th>
+            <td>@folder.Owner.Email</td>
+            <td>---</td>
+            @if (Context.User.FindFirstValue("Id") is { } str && new Guid(str) == folder.OwnerId || Context.User.IsInRole("Admin"))
+            {
+                <td class="align-middle p-0 text-center">
+                    <a class="text-danger" style="width: 100%;" asp-controller="Folders" asp-action="Delete" asp-route-id="@folder.Id">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+            
+        </tr>
+    }
+    @foreach (var file in Model.Folder.Files)
+    {
+        <tr>
+            <th scope="row">
+                <a asp-controller="Files" asp-action="GetFile" asp-route-id="@file.Id">
+                    <i class="bi bi-file-earmark"></i> @file.Name
+                </a>
+            </th>
+            <td>@file.Owner.Email</td>
+            <td>@file.Size Byte</td>
+            @if (Context.User.FindFirstValue("Id") is { } str && new Guid(str) == file.OwnerId || Context.User.IsInRole("Admin"))
+            {
+                <td class="align-middle p-0 text-center">
+                    <a class="text-danger" style="width: 100%;" asp-controller="Files" asp-action="Delete" asp-route-id="@file.Id">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+        </tr>
+    }
+    </tbody>
+</table>

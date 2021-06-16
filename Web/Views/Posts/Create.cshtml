@@ -1,0 +1,41 @@
+﻿@model Web.Controllers.PostsController.PostCreatingViewModel
+@{
+    ViewBag.Title = "Create post";
+}
+<h2>@ViewBag.Title</h2>
+
+<form asp-controller="Posts" asp-action="Create">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    
+    <!-- Title -->
+    <div class="form-group">
+        <label asp-for="Title" class="font-weight-bold"></label>
+        <input asp-for="Title" class="form-control" />
+        
+        <span asp-validation-for="Title"></span>
+    </div>
+    
+    <!-- Text -->
+    <div class="form-group">
+        <label asp-for="Text" class="font-weight-bold"></label>
+        <textarea asp-for="Text" class="form-control"></textarea>
+        
+        <span asp-validation-for="Text"></span>
+    </div>
+    
+    <!-- Category -->
+    <div class="form-group">
+        <label asp-for="CategoryId">Category</label>
+        <select asp-for="CategoryId" class="form-control">
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+    
+    <!-- Submit -->
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-outline-primary btn-sm" />
+    </div>
+</form>

@@ -1,0 +1,22 @@
+﻿@model Web.Controllers.PostsController.CommentCreatingViewModel
+@{
+    ViewBag.Title = "Create comment";
+}
+<h2>@ViewBag.Title</h2>
+
+<form asp-controller="Posts" asp-action="CreateComment" asp-route-postId="@Model.PostId">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+    
+    <!-- Text -->
+    <div class="form-group">
+        <label asp-for="Text" class="font-weight-bold"></label>
+        <textarea asp-for="Text" class="form-control"></textarea>
+        
+        <span asp-validation-for="Text"></span>
+    </div>
+
+    <!-- Submit -->
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-outline-primary btn-sm" />
+    </div>
+</form>

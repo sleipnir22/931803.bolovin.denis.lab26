@@ -1,0 +1,39 @@
+﻿@model Web.ViewModels.Account.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+<h2>Register</h2>
+
+<form asp-controller="Account" asp-action="Register">
+    <div class="validation" asp-validation-summary="ModelOnly"></div>
+
+    <!-- Email -->
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">@@</span>
+            </div>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <span asp-validation-for="Email"></span>
+    </div>
+    
+    <!-- Password -->
+    <div class="form-group">
+        <label asp-for="Password" class="font-weight-bold"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <!-- Confirm password -->
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="font-weight-bold"></label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword"></span>
+    </div>
+    
+    <!-- Submit -->
+    <div class="form-group">
+        <input type="submit" value="Register" class="btn btn-primary" />
+    </div>
+</form>

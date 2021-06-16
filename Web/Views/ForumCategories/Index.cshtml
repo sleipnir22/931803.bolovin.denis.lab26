@@ -1,0 +1,62 @@
+﻿@using System.Security.Claims
+@model IEnumerable<Web.Controllers.ForumCategoriesController.CategoriesViewModel>
+@{
+    ViewBag.Title = "Categories";
+}
+<h1>Categories</h1>
+
+<div class="input-group input-group-sm mb-1">
+    <div class="form-control"></div>
+    <div class="input-group-append">
+        @if (Context.User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-outline-info" asp-controller="ForumCategories" asp-action="Create">
+                New category
+            </a>
+        }
+    </div>
+</div>
+
+<table class="table table-bordered table-hover table-sm">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Author</th>
+        <th scope="col">Posts</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var category in Model)
+    {
+        <tr>
+            <th scope="row">
+                <a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-id="@category.Id">
+                    @category.Name
+                </a>
+            </th>
+            <td>@category.Author.Email</td>
+            <td>@category.PostCount</td>
+            @if (Context.User.FindFirstValue("Id") is { } str && new Guid(str) == category.Author.Id || Context.User.IsInRole("Admin"))
+            {
+                <td class="align-middle p-0 text-center">
+                    <a class="text-info" asp-controller="ForumCategories"
+                       asp-action="Edit" asp-route-id="@category.Id">
+                        Edit
+                    </a> 
+                    |
+                    <a class="text-danger" asp-controller="ForumCategories"
+                       asp-action="Delete" asp-route-id="@category.Id">
+                        Delete
+                    </a>
+                </td>
+            }
+            else
+            {
+                <td></td>
+            }
+            
+        </tr>
+    }
+    </tbody>
+</table>

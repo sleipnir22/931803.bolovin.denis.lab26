@@ -1,0 +1,67 @@
+﻿@using System.Security.Claims
+@model Web.Models.Post
+@{
+    ViewBag.Title = Model.Title;
+}
+<h6><a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-id="@Model.CategoryId" >@Model.Category.Name</a></h6>
+<h1>@ViewBag.Title</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="btn-group-sm btn-group">
+            @if (Context.User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Posts" asp-action="CreateComment" asp-route-postId="@Model.Id" type="button" class="btn btn-primary">Comment</a>
+            }
+            @if (Context.User.FindFirstValue("Id") is { } str2 && new Guid(str2) == Model.Author.Id || Context.User.IsInRole("Admin"))
+            {
+                <a asp-controller="Posts" asp-action="Attach" asp-route-postId="@Model.Id" type="button" class="btn btn-secondary">Attach</a>
+                <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            }
+            
+        </div>
+        <small class="text-muted" >@Model.Author.Email, @Model.CreateTime, (Edited: @Model.EditTime)</small>
+    </div>
+    <div class="card-body">
+        <p class="card-text">@Model.Text</p>
+        @if (@Model.Attachments.Any(x => x.IsImage))
+        {
+            <div class="card-group row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+                @foreach (var img in @Model.Attachments.Where(x => x.IsImage))
+                {
+                    <div class="card">
+                        <img src="@img.Url" class="card-img-top" alt="@img.Alt">
+                        @if (Context.User.FindFirstValue("Id") is { } str && new Guid(str) == Model.Author.Id || Context.User.IsInRole("Admin"))
+                        {
+                            <div class="card-img-overlay">
+                                <a asp-controller="Posts" asp-action="Deattach" asp-route-id="@img.Id" asp-route-postId="@Model.Id"
+                                   type="button" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@foreach (var comment in Model.Comments.OrderBy(x=>x.Time))
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="btn-group-sm btn-group">
+                @if (Context.User.FindFirstValue("Id") is { } str1 && new Guid(str1) == comment.Author.Id || Context.User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Posts" asp-action="DeleteComment" asp-route-postId="@Model.Id" asp-route-id="@comment.Id"
+                       class="btn btn-danger">Delete</a>
+                }
+            </div>
+            <small class="text-muted" >@comment.Author.Email, @comment.Time</small>
+        </div>
+        <div class="card-body">
+            <p class="card-text">@comment.Text</p>
+        </div>
+    </div>
+}
+
+

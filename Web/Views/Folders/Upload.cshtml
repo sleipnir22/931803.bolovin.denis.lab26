@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Upload file";
+}
+<h2>Upload file</h2>
+
+<form asp-controller="Folders" asp-action="Upload" method="post" asp-route-id="@ViewBag.FolderId" enctype="multipart/form-data">
+    <div class="validation" asp-validation-summary="All"></div>
+    
+    <!-- File -->
+    <div class="form-group mb-3">
+        <label class="font-weight-bold" for="file">File</label>
+        <input type="file" class="form-control-file" name="file" id="file">
+    </div>
+    
+    <!-- Submit -->
+    <div class="form-group">
+        <input type="submit" value="Upload" class="btn btn-outline-primary btn-sm" />
+    </div>
+</form>
